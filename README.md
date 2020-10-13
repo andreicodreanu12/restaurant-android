@@ -1,6 +1,7 @@
 # restaurant-android
 
 Features:
+
 	1) Authenticase user
 	
 	2) Display a list of products(menu) for a restaurant 
