@@ -5,7 +5,7 @@
     <string name="item_list_fragment_label">Item list Fragment</string>
     <string name="item_edit_fragment_label">Item edit Fragment</string>
     <string name="next">Edit</string>
-    <string name="previous">List</string>
+    <string name="previous">Cancel</string>
 
     <string name="hello_first_fragment">This should be a list of objects</string>
 </resources>
