@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_item_list.*
 
 class ItemListFragment : Fragment() {
@@ -40,6 +41,10 @@ class ItemListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Log.i(TAG, "onActivityCreated")
         setupItemList()
+        fab.setOnClickListener {
+            Log.v(TAG, "add new item")
+            findNavController().navigate(R.id.ItemEditFragment)
+        }
     }
 
     private fun setupItemList() {
