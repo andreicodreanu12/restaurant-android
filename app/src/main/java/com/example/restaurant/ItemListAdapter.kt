@@ -11,8 +11,13 @@ import kotlinx.android.synthetic.main.view_item.view.*
 
 class ItemListAdapter(
     private val fragment: Fragment,
-    private val items: List<MenuItem>
 ) : RecyclerView.Adapter<ItemListAdapter.ViewHolder>() {
+
+    var items = emptyList<MenuItem>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
