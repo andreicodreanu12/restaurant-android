@@ -3,6 +3,7 @@ package com.example.restaurant.todo.data
 import android.util.Log
 import com.example.restaurant.TAG
 import com.example.restaurant.todo.data.remote.ItemApi
+import com.example.restaurant.core.Result
 
 object ItemRepository {
     private var cachedItems: MutableList<MenuItem>? = null;
@@ -27,20 +28,26 @@ object ItemRepository {
         return ItemApi.service.read(itemId)
     }
 
-    suspend fun save(item: MenuItem): MenuItem {
-        Log.i(TAG, "save")
-        val createdItem = ItemApi.service.create(item)
-        cachedItems?.add(createdItem)
-        return createdItem
+    suspend fun save(item: MenuItem): Result<MenuItem> {
+        try {
+            val createdItem = ItemApi.service.create(item)
+            cachedItems?.add(createdItem)
+            return Result.Success(createdItem)
+        } catch (e: Exception) {
+            return Result.Error(e)
+        }
     }
 
-    suspend fun update(item: MenuItem): MenuItem {
-        Log.i(TAG, "update")
-        val updatedItem = ItemApi.service.update(item.id, item)
-        val index = cachedItems?.indexOfFirst { it.id == item.id }
-        if (index != null) {
-            cachedItems?.set(index, updatedItem)
+    suspend fun update(item: MenuItem): Result<MenuItem> {
+        try {
+            val updatedItem = ItemApi.service.update(item.id, item)
+            val index = cachedItems?.indexOfFirst { it.id == item.id }
+            if (index != null) {
+                cachedItems?.set(index, updatedItem)
+            }
+            return Result.Success(updatedItem)
+        } catch (e: Exception) {
+            return Result.Error(e)
         }
-        return updatedItem
     }
 }

@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.restaurant.TAG
 import com.example.restaurant.todo.data.ItemRepository
 import com.example.restaurant.todo.data.MenuItem
+import com.example.restaurant.core.Result
 import kotlinx.coroutines.launch
+
 
 class ItemEditViewModel : ViewModel() {
     private val mutableItem = MutableLiveData<MenuItem>().apply { value = MenuItem(0, "", "", 0.0f) }
@@ -48,20 +50,24 @@ class ItemEditViewModel : ViewModel() {
 
             mutableFetching.value = true
             mutableException.value = null
-            try {
-                if (item.id.toString().isNotEmpty()) {
-                    mutableItem.value = ItemRepository.update(item)
-                } else {
-                    mutableItem.value = ItemRepository.save(item)
-                }
-                Log.i(TAG, "saveOrUpdateItem succeeded");
-                mutableCompleted.value = true
-                mutableFetching.value = false
-            } catch (e: Exception) {
-                Log.w(TAG, "saveOrUpdateItem failed", e);
-                mutableException.value = e
-                mutableFetching.value = false
+            val result: Result<MenuItem>
+            if (item.id != 0) {
+                result = ItemRepository.update(item)
+            } else {
+                result = ItemRepository.save(item)
             }
+            when (result) {
+                is Result.Success -> {
+                    Log.d(TAG, "saveOrUpdateItem succeeded");
+                    mutableItem.value = result.data
+                }
+                is Result.Error -> {
+                    Log.w(TAG, "saveOrUpdateItem failed", result.exception);
+                    mutableException.value = result.exception
+                }
+            }
+            mutableCompleted.value = true
+            mutableFetching.value = false
         }
     }
 }
