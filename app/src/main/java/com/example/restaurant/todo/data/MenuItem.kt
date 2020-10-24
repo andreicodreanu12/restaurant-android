@@ -1,4 +1,4 @@
-package com.example.restaurant
+package com.example.restaurant.todo.data
 
 data class MenuItem(
     val id: Int,

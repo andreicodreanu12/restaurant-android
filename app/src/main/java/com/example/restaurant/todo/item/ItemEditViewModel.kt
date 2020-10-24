@@ -1,10 +1,13 @@
-package com.example.restaurant
+package com.example.restaurant.todo.item
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.restaurant.TAG
+import com.example.restaurant.todo.data.ItemRepository
+import com.example.restaurant.todo.data.MenuItem
 import kotlinx.coroutines.launch
 
 class ItemEditViewModel : ViewModel() {
@@ -46,7 +49,7 @@ class ItemEditViewModel : ViewModel() {
             mutableFetching.value = true
             mutableException.value = null
             try {
-                if (item.id != 0) {
+                if (item.id.toString().isNotEmpty()) {
                     mutableItem.value = ItemRepository.update(item)
                 } else {
                     mutableItem.value = ItemRepository.save(item)

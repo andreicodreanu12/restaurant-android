@@ -8,4 +8,7 @@
     <string name="previous">Cancel</string>
 
     <string name="hello_first_fragment">This should be a list of objects</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
 </resources>

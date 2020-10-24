@@ -1,4 +1,4 @@
-package com.example.restaurant
+package com.example.restaurant.todo.items
 
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +9,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.restaurant.R
+import com.example.restaurant.TAG
+import com.example.restaurant.todo.data.MenuItem
+import com.example.restaurant.todo.item.ItemEditFragment
 import kotlinx.android.synthetic.main.view_item.view.*
 
 class ItemListAdapter(
@@ -27,6 +31,7 @@ class ItemListAdapter(
         onItemClick = View.OnClickListener { view ->
             val item = view.tag as MenuItem
             fragment.findNavController().navigate(R.id.ItemEditFragment, Bundle().apply {
+                Log.v(TAG, item.id.toString() + item.description + item.title);
                 putString(ItemEditFragment.ITEM_ID, item.id.toString())
             })
         }
@@ -42,10 +47,11 @@ class ItemListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.v(TAG, "onBindViewHolder $position")
         val item = items[position]
+        holder.itemView.tag = item
         holder.titleView.text = item.title
         holder.descView.text = item.description
         holder.priceView.text = item.price.toString()
-        holder.itemView.tag = item
+        holder.itemView.setOnClickListener(onItemClick)
     }
 
     override fun getItemCount() = items.size

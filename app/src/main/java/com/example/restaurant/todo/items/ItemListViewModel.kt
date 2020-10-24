@@ -1,14 +1,14 @@
-package com.example.restaurant
+package com.example.restaurant.todo.items
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import com.example.restaurant.TAG
+import com.example.restaurant.todo.data.ItemRepository
+import com.example.restaurant.todo.data.MenuItem
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ItemListViewModel : ViewModel() {
     private val mutableItems = MutableLiveData<List<MenuItem>>().apply { value = emptyList() }

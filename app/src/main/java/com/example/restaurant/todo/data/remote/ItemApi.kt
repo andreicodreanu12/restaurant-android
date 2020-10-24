@@ -1,5 +1,6 @@
-package com.example.restaurant
+package com.example.restaurant.todo.data.remote
 
+import com.example.restaurant.todo.data.MenuItem
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.example.restaurant
+package com.example.restaurant.todo.item
 
 import android.os.Bundle
 import android.util.Log
@@ -6,11 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.restaurant.R
+import com.example.restaurant.TAG
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 
 class ItemEditFragment : Fragment() {
@@ -19,13 +20,13 @@ class ItemEditFragment : Fragment() {
     }
 
     private lateinit var viewModel: ItemEditViewModel
-    private var itemId: Int? = null
+    private var itemId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if(it.containsKey(ITEM_ID)) {
-                itemId = it.getInt(ITEM_ID)
+                itemId = it.getString(ITEM_ID).toString()
             }
         }
     }
@@ -86,7 +87,7 @@ class ItemEditFragment : Fragment() {
         })
         val id = itemId
         if (id != null) {
-            viewModel.loadItem(id)
+            viewModel.loadItem(id.toInt())
         }
     }
 
