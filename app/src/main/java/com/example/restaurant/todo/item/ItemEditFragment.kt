@@ -1,5 +1,6 @@
 package com.example.restaurant.todo.item
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,12 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.restaurant.R
 import com.example.restaurant.TAG
 import kotlinx.android.synthetic.main.fragment_item_edit.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class ItemEditFragment : Fragment() {
     companion object {
@@ -41,22 +46,27 @@ class ItemEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        item_title.setText(itemId.toString())
-        item_desc.setText(itemId.toString())
-        item_price.setText(itemId.toString())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.v(TAG, "onActivityCreated")
         setupViewModel()
         fab.setOnClickListener {
             Log.v(TAG, "save item")
-            viewModel.saveOrUpdateItem(item_title.text.toString(), item_desc.text.toString(), item_price.text.toString().toFloat())
+            val day: Int = item_introduced_at.dayOfMonth
+            val month: Int = item_introduced_at.month + 1
+            val year: Int = item_introduced_at.year
+            val date = LocalDate.of(year,month,day)
+            val time = LocalTime.now()
+            val datetime = LocalDateTime.of(date, time)
+            viewModel.saveOrUpdateItem(item_title.text.toString(), item_desc.text.toString(), item_price.text.toString().toFloat(), datetime.toString(), item_is_expensive.isChecked)
         }
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this).get(ItemEditViewModel::class.java)
         viewModel.item.observe(viewLifecycleOwner, { item ->
