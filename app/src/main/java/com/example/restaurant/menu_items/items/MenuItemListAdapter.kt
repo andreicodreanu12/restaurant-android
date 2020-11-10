@@ -1,4 +1,4 @@
-package com.example.restaurant.todo.items
+package com.example.restaurant.menu_items.items
 
 import android.os.Bundle
 import android.util.Log
@@ -10,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurant.R
-import com.example.restaurant.TAG
-import com.example.restaurant.todo.data.MenuItem
-import com.example.restaurant.todo.item.ItemEditFragment
+import com.example.restaurant.core.TAG
+import com.example.restaurant.menu_items.data.MenuItem
+import com.example.restaurant.menu_items.item.MenuItemEditFragment
 import kotlinx.android.synthetic.main.view_item.view.*
 
-class ItemListAdapter(
+class MenuItemListAdapter(
     private val fragment: Fragment,
-) : RecyclerView.Adapter<ItemListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MenuItemListAdapter.ViewHolder>() {
 
     var items = emptyList<MenuItem>()
         set(value) {
@@ -32,7 +32,7 @@ class ItemListAdapter(
             val item = view.tag as MenuItem
             fragment.findNavController().navigate(R.id.ItemEditFragment, Bundle().apply {
                 Log.v(TAG, item.id.toString() + item.description + item.title);
-                putString(ItemEditFragment.ITEM_ID, item.id.toString())
+                putString(MenuItemEditFragment.ITEM_ID, item.id.toString())
             })
         }
     }

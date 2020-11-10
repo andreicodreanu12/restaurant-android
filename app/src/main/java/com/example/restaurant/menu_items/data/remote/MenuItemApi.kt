@@ -1,14 +1,10 @@
-package com.example.restaurant.todo.data.remote
+package com.example.restaurant.menu_items.data.remote
 
 import com.example.restaurant.core.Api
-import com.example.restaurant.todo.data.MenuItem
-import com.google.gson.GsonBuilder
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.restaurant.menu_items.data.MenuItem
 import retrofit2.http.*
 
-object ItemApi {
+object MenuItemApi {
 
     interface Service {
         @GET("/items")

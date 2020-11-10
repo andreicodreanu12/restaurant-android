@@ -1,4 +1,4 @@
-package com.example.restaurant.todo.items
+package com.example.restaurant.menu_items.items
 
 import android.os.Bundle
 import android.util.Log
@@ -10,68 +10,69 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.restaurant.R
-import com.example.restaurant.TAG
+import com.example.restaurant.auth.data.AuthRepository
+import com.example.restaurant.core.TAG
 import kotlinx.android.synthetic.main.fragment_item_list.*
 
-class ItemListFragment : Fragment() {
-    private lateinit var itemListAdapter: ItemListAdapter
-    private lateinit var itemsModel: ItemListViewModel
-    override fun onCreate(savedInstanceState: Bundle?){
+class MenuItemListFragment : Fragment() {
+    private lateinit var menuItemListAdapter: MenuItemListAdapter
+    private lateinit var itemsModelMenu: MenuItemListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate")
+        Log.v(TAG, "onCreate")
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_item_list, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fab.setOnClickListener {
-            Log.v(TAG, "creating new item")
-            itemsModel.items.value?.size?.let { itemsModel.createItem(it) }
-        }
-
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.i(TAG, "onActivityCreated")
+        Log.v(TAG, "onActivityCreated")
+        if (!AuthRepository.isLoggedIn) {
+            findNavController().navigate(R.id.fragment_login)
+            return;
+        }
         setupItemList()
         fab.setOnClickListener {
             Log.v(TAG, "add new item")
             findNavController().navigate(R.id.ItemEditFragment)
         }
+        logout.setOnClickListener{
+            Log.v(TAG, "LOGOUT")
+            AuthRepository.logout()
+            findNavController().navigate(R.id.fragment_login)
+        }
     }
 
     private fun setupItemList() {
-        itemListAdapter = ItemListAdapter(this)
-        item_list.adapter = itemListAdapter
-        itemsModel = ViewModelProvider(this).get(ItemListViewModel::class.java)
-        itemsModel.items.observe(viewLifecycleOwner, { items ->
-            Log.i(TAG, "update items")
-            itemListAdapter.items = items
+        menuItemListAdapter = MenuItemListAdapter(this)
+        item_list.adapter = menuItemListAdapter
+        itemsModelMenu = ViewModelProvider(this).get(MenuItemListViewModel::class.java)
+        itemsModelMenu.items.observe(viewLifecycleOwner, { items ->
+            Log.v(TAG, "update items")
+            menuItemListAdapter.items = items
         })
-        itemsModel.loading.observe(viewLifecycleOwner, { loading ->
+        itemsModelMenu.loading.observe(viewLifecycleOwner, { loading ->
             Log.i(TAG, "update loading")
             progress.visibility = if (loading) View.VISIBLE else View.GONE
         })
-        itemsModel.loadingError.observe(viewLifecycleOwner, { exception ->
+        itemsModelMenu.loadingError.observe(viewLifecycleOwner, { exception ->
             if (exception != null) {
                 Log.i(TAG, "update loading error")
                 val message = "Loading exception ${exception.message}"
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
             }
         })
-        itemsModel.loadItems()
+        itemsModelMenu.refresh()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "onDestroy")
+        Log.v(TAG, "onDestroy")
     }
 }

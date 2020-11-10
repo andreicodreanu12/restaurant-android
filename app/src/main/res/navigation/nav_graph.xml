@@ -5,9 +5,16 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/ItemListFragment">
 
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.example.restaurant.auth.login.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login" />
+
     <fragment
         android:id="@+id/ItemListFragment"
-        android:name="com.example.restaurant.todo.items.ItemListFragment"
+        android:name="com.example.restaurant.menu_items.items.MenuItemListFragment"
         android:label="@string/item_list_fragment_label"
         tools:layout="@layout/fragment_item_list">
 
@@ -17,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/ItemEditFragment"
-        android:name="com.example.restaurant.todo.item.ItemEditFragment"
+        android:name="com.example.restaurant.menu_items.item.MenuItemEditFragment"
         android:label="@string/item_edit_fragment_label"
         tools:layout="@layout/fragment_item_edit">
 

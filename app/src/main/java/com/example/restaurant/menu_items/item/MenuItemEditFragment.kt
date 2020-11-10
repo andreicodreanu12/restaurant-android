@@ -1,4 +1,4 @@
-package com.example.restaurant.todo.item
+package com.example.restaurant.menu_items.item
 
 import android.os.Build
 import android.os.Bundle
@@ -9,23 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.restaurant.R
-import com.example.restaurant.TAG
+import com.example.restaurant.core.TAG
+import com.example.restaurant.menu_items.data.MenuItem
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-class ItemEditFragment : Fragment() {
+class MenuItemEditFragment : Fragment() {
     companion object {
         const val ITEM_ID = "ITEM_ID"
     }
 
-    private lateinit var viewModel: ItemEditViewModel
+    private lateinit var viewModelMenu: MenuItemEditViewModel
     private var itemId: String? = null
+    private var item: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,31 +57,33 @@ class ItemEditFragment : Fragment() {
         setupViewModel()
         fab.setOnClickListener {
             Log.v(TAG, "save item")
+            val i = item
             val day: Int = item_introduced_at.dayOfMonth
             val month: Int = item_introduced_at.month + 1
             val year: Int = item_introduced_at.year
             val date = LocalDate.of(year,month,day)
             val time = LocalTime.now()
             val datetime = LocalDateTime.of(date, time)
-            viewModel.saveOrUpdateItem(item_title.text.toString(), item_desc.text.toString(), item_price.text.toString().toFloat(), datetime.toString(), item_is_expensive.isChecked)
+            if (i != null) {
+                i.title = item_title.text.toString()
+                i.description = item_desc.text.toString()
+                i.price = item_price.text.toString().toFloat()
+                i.introduced_at = datetime.toString()
+                i.is_expensive = item_is_expensive.isChecked
+                viewModelMenu.saveOrUpdateItem(i)
+            }
         }
 
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this).get(ItemEditViewModel::class.java)
-        viewModel.item.observe(viewLifecycleOwner, { item ->
-            Log.v(TAG, "update items")
-            item_title.setText(item.title)
-            item_desc.setText(item.description)
-            item_price.setText(item.price.toString())
-        })
-        viewModel.fetching.observe(viewLifecycleOwner, { fetching ->
+        viewModelMenu = ViewModelProvider(this).get(MenuItemEditViewModel::class.java)
+        viewModelMenu.fetching.observe(viewLifecycleOwner, { fetching ->
             Log.v(TAG, "update fetching")
             progress.visibility = if (fetching) View.VISIBLE else View.GONE
         })
-        viewModel.fetchingError.observe(viewLifecycleOwner, { exception ->
+        viewModelMenu.fetchingError.observe(viewLifecycleOwner, { exception ->
             if (exception != null) {
                 Log.v(TAG, "update fetching error")
                 val message = "Fetching exception ${exception.message}"
@@ -89,20 +93,27 @@ class ItemEditFragment : Fragment() {
                 }
             }
         })
-        viewModel.completed.observe(viewLifecycleOwner, Observer { completed ->
+        viewModelMenu.completed.observe(viewLifecycleOwner, { completed ->
             if (completed) {
                 Log.v(TAG, "completed, navigate back")
-                findNavController().navigateUp()
+                findNavController().popBackStack()
             }
         })
         val id = itemId
-        if (id != null) {
-            viewModel.loadItem(id.toInt())
+        if (id == null) {
+            item = MenuItem(-1, "", "", 0.toFloat(), LocalDateTime.now().toString(), false);
+        } else {
+            viewModelMenu.getItemById(id).observe(viewLifecycleOwner, {
+                Log.v(TAG, "update items")
+                if (it != null) {
+                    item = it
+                    item_title.setText(it.title)
+                    item_desc.setText(it.description)
+                    item_price.setText(it.price.toString())
+                    Log.v(TAG, item!!.introduced_at)
+                    item_is_expensive.isChecked = it.is_expensive;
+                }
+            })
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(TAG, "onDestroy")
     }
 }

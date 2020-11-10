@@ -1,4 +1,4 @@
-package com.example.restaurant
+package com.example.restaurant.core
 
 val Any.TAG: String
     get() {

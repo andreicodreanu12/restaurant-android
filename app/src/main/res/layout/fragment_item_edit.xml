@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".todo.item.ItemEditFragment">
+        tools:context=".menu_items.item.MenuItemEditFragment">
 
         <ProgressBar
             android:id="@+id/progress"
