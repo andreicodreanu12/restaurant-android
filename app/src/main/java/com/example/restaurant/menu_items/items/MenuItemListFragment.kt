@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.restaurant.R
 import com.example.restaurant.auth.data.AuthRepository
+import com.example.restaurant.core.Constants
 import com.example.restaurant.core.TAG
 import kotlinx.android.synthetic.main.fragment_item_list.*
 
@@ -33,7 +34,7 @@ class MenuItemListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.v(TAG, "onActivityCreated")
-        if (!AuthRepository.isLoggedIn) {
+        if (Constants.instance()?.fetchValueString("token") == null) {
             findNavController().navigate(R.id.fragment_login)
             return;
         }

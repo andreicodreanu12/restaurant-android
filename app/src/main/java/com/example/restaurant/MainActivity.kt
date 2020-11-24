@@ -5,12 +5,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.restaurant.core.Constants
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        Constants.instance(this.applicationContext);
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
